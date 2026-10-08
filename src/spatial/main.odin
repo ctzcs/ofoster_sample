@@ -1,62 +1,46 @@
 package main
 
 import "core:fmt"
-import spatial "ofoster:Spatial"
-import images "ofoster:Images"
-import graphics_enums "ofoster:Graphics/Enums"
-import graphics "ofoster:Graphics"
-import graphics_structs "ofoster:Graphics/Structs"
-import input_enums "ofoster:Input/Enums"
-import input "ofoster:Input"
-import storage "ofoster:Storage"
-import utility "ofoster:Utility"
-import bindings "ofoster:Input/Bindings"
-import defaults "ofoster:Graphics/Defaults"
-import interfaces "ofoster:Graphics/Interfaces"
-import virtual "ofoster:Input/Virtual"
-import input_sets "ofoster:Input/Sets"
-import utility_ext "ofoster:Extensions"
-import internal "ofoster:Internal"
-import thirdparty "ofoster:Internal/ThirdParty"
+import thirdparty "olib:foster/internal/third_party"
+import foster "olib:foster"
 
 main :: proc() {
-	p := spatial.Point2{3, 4}
-	fmt.println("point length:", spatial.Point2Length(p))
-	r := spatial.RectInt{0, 0, 10, 10}
-	fmt.println("contains:", spatial.RectIntContains(r, spatial.Point2{4, 4}))
-	fmt.println("intersection area:", spatial.RectIntArea(spatial.RectIntIntersection(r, spatial.RectInt{5, 5, 10, 10})))
-	fmt.println("line intersection:", spatial.LineIntIntersects(spatial.LineIntMake(spatial.Point2{0, 0}, spatial.Point2{10, 10}), spatial.LineIntMake(spatial.Point2{0, 10}, spatial.Point2{10, 0})))
-	fmt.println("cardinal point:", spatial.CardinalPoint(spatial.CardinalLeft))
-	float_rect := spatial.Rect{0, 0, 10, 10}
-	line_hit, line_point := spatial.RectOverlapsLine(float_rect, spatial.LineMake(spatial.Vec2{-2, 5}, spatial.Vec2{12, 5}))
+	p := foster.Point2{3, 4}
+	fmt.println("point length:", foster.Point2Length(p))
+	r := foster.RectInt{0, 0, 10, 10}
+	fmt.println("contains:", foster.RectIntContains(r, foster.Point2{4, 4}))
+	fmt.println("intersection area:", foster.RectIntArea(foster.RectIntIntersection(r, foster.RectInt{5, 5, 10, 10})))
+	fmt.println("line intersection:", foster.LineIntIntersects(foster.LineIntMake(foster.Point2{0, 0}, foster.Point2{10, 10}), foster.LineIntMake(foster.Point2{0, 10}, foster.Point2{10, 0})))
+	fmt.println("cardinal point:", foster.CardinalPoint(foster.CardinalLeft))
+	float_rect := foster.Rect{0, 0, 10, 10}
+	line_hit, line_point := foster.RectOverlapsLine(float_rect, foster.LineMake(foster.Vec2{-2, 5}, foster.Vec2{12, 5}))
 	fmt.println("rect/line:", line_hit, line_point)
-	circle_hit, pushout := spatial.CircleOverlaps(spatial.CircleMake(spatial.Vec2{0, 0}, 5), spatial.CircleMake(spatial.Vec2{8, 0}, 5))
+	circle_hit, pushout := foster.CircleOverlaps(foster.CircleMake(foster.Vec2{0, 0}, 5), foster.CircleMake(foster.Vec2{8, 0}, 5))
 	fmt.println("circle overlap:", circle_hit, pushout)
-	transform := spatial.TransformMake(spatial.Vec2{10, 20}, spatial.Vec2{2, 2}, 0)
-	transformed := spatial.TransformPoint(&transform, spatial.Vec2{1, 1})
-	fmt.println("transform:", transformed, spatial.TransformPointInverse(&transform, transformed))
-	fmt.println("red rgba:", images.RGBA(images.Red), "format size:", graphics_enums.TextureFormatSize(.Color), "key:", input_enums.Keys.A)
-	_ = input.KeyboardState{}
-	_ = input.MouseState{}
-	_ = input.ControllerState{}
-	_ = storage.StorageContainer{}
-	fmt.println("ease:", utility.InOutQuad(0.25), "clamp:", utility.Clamp01(1.5))
-	_ = bindings.BindingAxisOverlapResolve(.CancelOut, bindings.BindingState{}, bindings.BindingState{})
-	_ = defaults.BatcherVertex{}
-	_ = interfaces.VertexData{}
-	_ = graphics.Texture{}
-	_ = graphics_structs.VertexFormat{}
-	fake_texture := graphics.Texture{Width = 64, Height = 32}
-	subtexture := graphics_structs.SubtextureFromSource(&fake_texture, spatial.Rect{16, 8, 32, 16})
+	transform := foster.TransformMake(foster.Vec2{10, 20}, foster.Vec2{2, 2}, 0)
+	transformed := foster.TransformPoint(&transform, foster.Vec2{1, 1})
+	fmt.println("transform:", transformed, foster.TransformPointInverse(&transform, transformed))
+	fmt.println("red rgba:", foster.RGBA(foster.Red), "format size:", foster.TextureFormatSize(.Color), "key:", foster.Keys.A)
+	_ = foster.KeyboardState{}
+	_ = foster.MouseState{}
+	_ = foster.ControllerState{}
+	_ = foster.StorageContainer{}
+	fmt.println("ease:", foster.InOutQuad(0.25), "clamp:", foster.Clamp01(1.5))
+	_ = foster.BindingAxisOverlapResolve(.CancelOut, foster.BindingState{}, foster.BindingState{})
+	_ = foster.BatcherVertex{}
+	_ = foster.Texture{}
+	_ = foster.VertexFormat{}
+	fake_texture := foster.Texture{Width = 64, Height = 32}
+	subtexture := foster.SubtextureFromSource(&fake_texture, foster.Rect{16, 8, 32, 16})
 	fmt.println("tex coords:", subtexture.TexCoords[0], subtexture.TexCoords[2])
-	polygon := spatial.PolygonMake(spatial.Vec2{0, 0}, spatial.Vec2{10, 0}, spatial.Vec2{10, 10}, spatial.Vec2{0, 10})
-	fmt.println("polygon:", spatial.PolygonContains(polygon, spatial.Vec2{5, 5}), spatial.PolygonArea(&polygon), len(polygon.Indices))
-	rng := utility.RngMake(123)
-	fmt.println("rng:", utility.RngIntMax(&rng, 10), utility.RngChance(&rng, 1))
-	action_set := input_sets.ActionBindingSetMake()
-	input_sets.ActionBindingSetAddKey(&action_set, input_enums.Keys.Space)
-	input_state := input.Input{}
-	action := virtual.VirtualActionMake(&input_state, "jump", action_set)
-	virtual.VirtualActionUpdate(&action, utility.Time{})
-	fmt.println("virtual action:", action.Value, utility_ext.EnumHas(3, 1), internal.Utf8FromString("ok"), thirdparty.QoiIsFormat([]u8{'q', 'o', 'i', 'f'}))
+	polygon := foster.PolygonMake(foster.Vec2{0, 0}, foster.Vec2{10, 0}, foster.Vec2{10, 10}, foster.Vec2{0, 10})
+	fmt.println("polygon:", foster.PolygonContains(polygon, foster.Vec2{5, 5}), foster.PolygonArea(&polygon), len(polygon.Indices))
+	rng := foster.RngMake(123)
+	fmt.println("rng:", foster.RngIntMax(&rng, 10), foster.RngChance(&rng, 1))
+	action_set := foster.ActionBindingSetMake()
+	foster.ActionBindingSetAddKey(&action_set, foster.Keys.Space)
+	input_state := foster.Input{}
+	action := foster.VirtualActionMake(&input_state, "jump", action_set)
+	foster.VirtualActionUpdate(&action, foster.Time{})
+	fmt.println("virtual action:", action.Value, foster.EnumHas(3, 1), thirdparty.QoiIsFormat([]u8{'q', 'o', 'i', 'f'}))
 }

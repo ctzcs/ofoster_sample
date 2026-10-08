@@ -1,7 +1,7 @@
 package main
 
 import "core:fmt"
-import foster "ofoster:."
+import foster "olib:foster"
 
 quad_mesh: foster.Mesh
 quad_material: foster.Material

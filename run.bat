@@ -4,6 +4,6 @@ set SAMPLE=%~1
 if "%SAMPLE%"=="" set SAMPLE=basic
 if not exist ".\src\%SAMPLE%\main.odin" exit /b 1
 if not exist build mkdir build
-odin build ".\src\%SAMPLE%" -collection:ofoster=..\OFoster -out:"build\%SAMPLE%.exe"
+odin build ".\src\%SAMPLE%" -collection:olib=..\olib -out:"build\%SAMPLE%.exe"
 if errorlevel 1 exit /b %errorlevel%
 "build\%SAMPLE%.exe"

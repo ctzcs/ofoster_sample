@@ -1,15 +1,14 @@
 package main
 
 import "core:fmt"
-import utility "ofoster:Utility"
-import spatial "ofoster:Spatial"
+import foster "olib:foster"
 
 main :: proc() {
 	values := []f32{3, 1, 2}
-	fmt.println("smallest/largest/closest:", utility.Smallest(values), utility.Largest(values), utility.GetClosestValue(values, f32(1.6)))
+	fmt.println("smallest/largest/closest:", foster.Smallest(values), foster.Largest(values), foster.GetClosestValue(values, f32(1.6)))
 	indices: [dynamic]int = {}
-	utility.Triangulate([]spatial.Vec2{{0, 0}, {2, 0}, {2, 2}, {0, 2}}, &indices)
+	foster.Triangulate([]foster.Vec2{{0, 0}, {2, 0}, {2, 2}, {0, 2}}, &indices)
 	fmt.println("triangulation:", indices)
-	v, ok := utility.ParseVector2("1.5,2.5", ',')
-	fmt.println("parse/hash:", v, ok, utility.StaticStringHash("abc"))
+	v, ok := foster.ParseVector2("1.5,2.5", ',')
+	fmt.println("parse/hash:", v, ok, foster.StaticStringHash("abc"))
 }

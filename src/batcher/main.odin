@@ -1,20 +1,18 @@
 package main
 
 import "core:fmt"
-import foster "ofoster:."
-import graphics "ofoster:Graphics"
-import spatial "ofoster:Spatial"
+import foster "olib:foster"
 
-batcher: graphics.Batcher
+batcher: foster.Batcher
 
 startup :: proc(app: ^foster.App) {
-	graphics.BatcherInit(&batcher, &app.GraphicsDevice, "BatcherExample")
+	foster.BatcherInit(&batcher, &app.GraphicsDevice, "BatcherExample")
 	fmt.println("Batcher ready")
 }
 
 shutdown :: proc(app: ^foster.App) {
 	_ = app
-	graphics.BatcherDispose(&batcher)
+	foster.BatcherDispose(&batcher)
 }
 
 update :: proc(app: ^foster.App) {
@@ -25,15 +23,15 @@ render :: proc(app: ^foster.App) {
 	target := foster.DrawableTargetFromWindow(&app.Window)
 	foster.GraphicsDeviceClear(&app.GraphicsDevice, target, foster.Color{24, 28, 36, 255})
 
-	graphics.BatcherClear(&batcher)
-	graphics.BatcherRect(&batcher, spatial.Rect{80, 60, 220, 140}, foster.Color{220, 80, 70, 255})
-	graphics.BatcherCircle(&batcher, spatial.Vec2{430, 130}, 70, 32, foster.Color{70, 170, 235, 255})
-	graphics.BatcherLine(&batcher, spatial.Vec2{80, 260}, spatial.Vec2{560, 300}, 8, foster.Color{245, 205, 70, 255})
-	graphics.BatcherRender(&batcher, target)
+	foster.BatcherClear(&batcher)
+	foster.BatcherRect(&batcher, foster.Rect{80, 60, 220, 140}, foster.Color{220, 80, 70, 255})
+	foster.BatcherCircle(&batcher, foster.Vec2{430, 130}, 70, 32, foster.Color{70, 170, 235, 255})
+	foster.BatcherLine(&batcher, foster.Vec2{80, 260}, foster.Vec2{560, 300}, 8, foster.Color{245, 205, 70, 255})
+	foster.BatcherRender(&batcher, target)
 }
 
 main :: proc() {
-	config := foster.DefaultAppConfig("BatcherExample", 640, 360)
+	config := foster.DefaultAppConfig("BatcherExample", 1280, 720)
 	config.WindowTitle = "Foster Odin Batcher"
 
 	app: foster.App
